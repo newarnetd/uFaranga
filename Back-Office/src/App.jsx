@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Button, FacebookButton } from './components/common';
 import ThemeToggle from './components/common/ThemeToggle';
+import SpinnerShowcase from './components/SpinnerShowcase';
 
 function AppContent() {
   const [loadingStates, setLoadingStates] = useState({
@@ -9,6 +10,7 @@ function AppContent() {
     facebook: false,
     variant: false
   });
+  const [showSpinnerShowcase, setShowSpinnerShowcase] = useState(false);
 
   const handleTestSpinner = (type) => {
     setLoadingStates(prev => ({ ...prev, [type]: true }));
@@ -19,13 +21,26 @@ function AppContent() {
     }, 3000);
   };
 
+  if (showSpinnerShowcase) {
+    return <SpinnerShowcase onBack={() => setShowSpinnerShowcase(false)} />;
+  }
+
   return (
     <div className="min-h-screen transition-colors duration-300">
       <div className="p-8">
         {/* Header avec toggle de thème */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-indigo-600 font-roboto">uFaranga - Back Office</h1>
-          <ThemeToggle />
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              size="small"
+              onClick={() => setShowSpinnerShowcase(true)}
+            >
+              🎨 Voir les Spinners
+            </Button>
+            <ThemeToggle />
+          </div>
         </div>
         
         <div className="mt-4 p-4 bg-card border border-default rounded mb-8">
@@ -43,7 +58,7 @@ function AppContent() {
               onClick={() => handleTestSpinner('standard')}
               disabled={loadingStates.standard}
             >
-              {loadingStates.standard ? 'Chargement...' : 'Test Spinner Standard'}
+              {loadingStates.standard ? 'En cours...' : 'Test Spinner Standard'}
             </Button>
             
             <Button 
@@ -52,7 +67,7 @@ function AppContent() {
               onClick={() => handleTestSpinner('variant')}
               disabled={loadingStates.variant}
             >
-              {loadingStates.variant ? 'Chargement...' : 'Bouton Facebook Variant'}
+              {loadingStates.variant ? 'En cours...' : 'Bouton Facebook Variant'}
             </Button>
           </div>
         </div>

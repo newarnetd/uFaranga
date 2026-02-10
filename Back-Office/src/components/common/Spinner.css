@@ -6,6 +6,18 @@
   justify-content: center;
 }
 
+.spinner-container.spinner-with-text {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.spinner-text {
+  margin: 0;
+  line-height: 1;
+}
+
 .spinner-overlay {
   position: fixed;
   top: 0;
@@ -16,46 +28,59 @@
   z-index: 9999;
 }
 
-/* Spinner radial - Version propre et professionnelle */
+/* Spoke Spinner - Magnifique spinner radial avec barrettes tournantes */
 .spinner-radial {
-  width: 20px;
-  height: 20px;
   position: relative;
   display: inline-block;
 }
 
-.spinner-radial::before {
-  content: '';
+.spinner-spoke {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-right: 2px solid currentColor;
-  animation: spin-smooth 0.8s linear infinite;
+  left: 50%;
+  top: 4%;
+  width: 1.5px;
+  height: 42%;
+  margin-left: -0.75px;
+  background: currentColor;
+  border-radius: 1.5px;
+  transform-origin: 50% calc(100% + (50% - 4%) / 0.42);
+  animation: spoke-fade 1.2s linear infinite;
+  opacity: 0;
 }
 
-.spinner-radial::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: calc(100% - 4px);
-  height: calc(100% - 4px);
-  border-radius: 50%;
-  border: 1px solid transparent;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
-  border-left: 1px solid rgba(128, 128, 128, 0.2);
-  animation: spin-smooth 0.8s linear infinite reverse;
+/* Animation de fade pour chaque barrette */
+@keyframes spoke-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.15;
+  }
 }
 
-/* Animation fluide et professionnelle */
-@keyframes spin-smooth {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* Variantes de taille pour les barrettes */
+.spinner-radial[style*="width: 14px"] .spinner-spoke {
+  width: 1.2px;
+  margin-left: -0.6px;
+  top: 5%;
+  height: 40%;
+  border-radius: 1.2px;
+}
+
+.spinner-radial[style*="width: 28px"] .spinner-spoke {
+  width: 2px;
+  margin-left: -1px;
+  top: 3%;
+  height: 43%;
+  border-radius: 2px;
+}
+
+.spinner-radial[style*="width: 36px"] .spinner-spoke {
+  width: 2.5px;
+  margin-left: -1.25px;
+  top: 3%;
+  height: 44%;
+  border-radius: 2.5px;
 }
 
 /* Dot Spinner */

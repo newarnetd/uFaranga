@@ -1,123 +1,119 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cookie&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cookie&family=Kaushan+Script&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Couleurs Facebook exactes */
 @layer base {
-  :root {
-    --facebook: #1877f2;
-    --facebook-hover: #166fe5;
-    --facebook-active: #1464cc;
+  * {
+    @apply border-gray-800;
   }
-  
-  /* Police par défaut - Roboto */
+
   body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #000000;
-    color: #ffffff;
+    @apply bg-black text-white font-inter;
   }
 }
 
 @layer utilities {
-  /* Couleurs Facebook */
-  .bg-facebook {
-    background-color: var(--facebook);
+  .text-glow {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
   }
-  
-  .bg-facebook-hover {
-    background-color: var(--facebook-hover);
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
-  
-  .bg-facebook-active {
-    background-color: var(--facebook-active);
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  
-  .text-facebook {
-    color: var(--facebook);
+
+  /* Font families */
+  .font-inter {
+    font-family: 'Inter', sans-serif;
   }
-  
-  .border-facebook {
-    border-color: var(--facebook);
+
+  .font-poppins {
+    font-family: 'Poppins', sans-serif;
   }
-  
-  .ring-facebook {
-    --tw-ring-color: var(--facebook);
-  }
-  
-  .shadow-facebook {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  
-  .shadow-facebook-hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Thème Dark (par défaut) */
-  .theme-dark {
-    background-color: #000000;
-    color: #ffffff;
-  }
-  
-  .theme-dark .bg-card {
-    background-color: #1a1a1a;
-    border-color: #333333;
-  }
-  
-  .theme-dark .bg-input {
-    background-color: #2a2a2a;
-    border-color: #404040;
-    color: #ffffff;
-  }
-  
-  .theme-dark .text-muted {
-    color: #a0a0a0;
-  }
-  
-  .theme-dark .border-default {
-    border-color: #333333;
-  }
-  
-  /* Thème Light */
-  .theme-light {
-    background-color: #ffffff;
-    color: #000000;
-  }
-  
-  .theme-light .bg-card {
-    background-color: #ffffff;
-    border-color: #e5e5e5;
-  }
-  
-  .theme-light .bg-input {
-    background-color: #ffffff;
-    border-color: #d1d5db;
-    color: #000000;
-  }
-  
-  .theme-light .text-muted {
-    color: #6b7280;
-  }
-  
-  .theme-light .border-default {
-    border-color: #e5e5e5;
-  }
-  
-  /* Classes de polices */
+
   .font-roboto {
     font-family: 'Roboto', sans-serif;
   }
-  
+
   .font-anton {
     font-family: 'Anton', sans-serif;
   }
-  
+
   .font-bangers {
     font-family: 'Bangers', cursive;
   }
-  
+
   .font-cookie {
     font-family: 'Cookie', cursive;
   }
+
+  .font-kaushan {
+    font-family: 'Kaushan Script', cursive;
+  }
+
+  /* Custom Utilities */
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+
+  .glass-hover {
+    @apply hover:bg-white/10 hover:border-white/20 transition-all duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400;
+  }
+
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-400;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-black;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-700 rounded-full hover:bg-gray-600 transition-colors;
+  }
+}
+
+/* Animations */
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+/* Animation Play State */
+.pause-on-hover:hover {
+  animation-play-state: paused;
+}
+
+.running {
+  animation-play-state: running;
 }

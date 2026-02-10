@@ -8,11 +8,11 @@ const Spinner = ({
   overlay = false,
   className = '' 
 }) => {
-  const sizeClasses = {
-    small: 'w-4 h-4',
-    medium: 'w-5 h-5',
-    large: 'w-6 h-6',
-    xlarge: 'w-8 h-8'
+  const sizeMap = {
+    small: 14,
+    medium: 20,
+    large: 28,
+    xlarge: 36
   };
 
   const colorClasses = {
@@ -24,11 +24,28 @@ const Spinner = ({
     white: 'text-white'
   };
 
+  const spinnerSize = sizeMap[size];
+  const spokeCount = 12;
+
   const spinnerElement = (
-    <div className={`spinner-container ${overlay ? 'spinner-overlay' : ''} ${className}`}>
-      <div className={`spinner-radial ${sizeClasses[size]} ${colorClasses[color]}`}></div>
+    <div className={`spinner-container ${text ? 'spinner-with-text' : ''} ${overlay ? 'spinner-overlay' : ''} ${className}`}>
+      <div 
+        className={`spinner-radial ${colorClasses[color]}`}
+        style={{ width: `${spinnerSize}px`, height: `${spinnerSize}px` }}
+      >
+        {[...Array(spokeCount)].map((_, index) => (
+          <div
+            key={index}
+            className="spinner-spoke"
+            style={{
+              transform: `rotate(${index * (360 / spokeCount)}deg)`,
+              animationDelay: `${-((spokeCount - index) / spokeCount)}s`
+            }}
+          />
+        ))}
+      </div>
       {text && (
-        <p className={`spinner-text mt-2 text-sm ${color === 'white' ? 'text-white' : 'text-gray-600'}`}>
+        <p className={`spinner-text text-sm ${color === 'white' ? 'text-white' : 'text-gray-600'}`}>
           {text}
         </p>
       )}
@@ -52,11 +69,11 @@ export const RadialSpinner = ({
   color = 'primary', 
   className = '' 
 }) => {
-  const sizeClasses = {
-    small: 'w-4 h-4',
-    medium: 'w-5 h-5',
-    large: 'w-6 h-6',
-    xlarge: 'w-8 h-8'
+  const sizeMap = {
+    small: 14,
+    medium: 20,
+    large: 28,
+    xlarge: 36
   };
 
   const colorClasses = {
@@ -68,8 +85,25 @@ export const RadialSpinner = ({
     white: 'text-white'
   };
 
+  const spinnerSize = sizeMap[size];
+  const spokeCount = 12;
+
   return (
-    <div className={`spinner-radial ${sizeClasses[size]} ${colorClasses[color]} ${className}`}></div>
+    <div 
+      className={`spinner-radial ${colorClasses[color]} ${className}`}
+      style={{ width: `${spinnerSize}px`, height: `${spinnerSize}px` }}
+    >
+      {[...Array(spokeCount)].map((_, index) => (
+        <div
+          key={index}
+          className="spinner-spoke"
+          style={{
+            transform: `rotate(${index * (360 / spokeCount)}deg)`,
+            animationDelay: `${-((spokeCount - index) / spokeCount)}s`
+          }}
+        />
+      ))}
+    </div>
   );
 };
 

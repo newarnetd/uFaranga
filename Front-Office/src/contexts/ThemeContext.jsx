@@ -21,10 +21,12 @@ export const ThemeProvider = ({ children }) => {
   }, []);
 
   const applyTheme = (newTheme) => {
-    // Supprimer les anciennes classes de thème
-    document.body.classList.remove('theme-dark', 'theme-light');
-    // Ajouter la nouvelle classe de thème
-    document.body.classList.add(`theme-${newTheme}`);
+    const root = document.documentElement;
+    if (newTheme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
   };
 
   const toggleTheme = () => {
