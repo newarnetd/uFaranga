@@ -15,7 +15,7 @@ const Button = ({
   className = '',
   ...props
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variantClasses = {
     primary: 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500',
@@ -23,16 +23,17 @@ const Button = ({
     success: 'bg-green-600 hover:bg-green-700 text-white focus:ring-green-500',
     warning: 'bg-yellow-600 hover:bg-yellow-700 text-white focus:ring-yellow-500',
     danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
-    outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white focus:ring-blue-500',
-    ghost: 'text-blue-600 hover:bg-blue-50 focus:ring-blue-500',
-    link: 'text-blue-600 hover:text-blue-800 underline-offset-4 hover:underline focus:ring-blue-500'
+    outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white focus:ring-blue-500 bg-white',
+    ghost: 'text-blue-600 hover:bg-blue-50 focus:ring-blue-500 bg-transparent',
+    link: 'text-blue-600 hover:text-blue-800 underline-offset-4 hover:underline focus:ring-blue-500 bg-transparent',
+    facebook: 'bg-facebook hover:bg-facebook-hover active:bg-facebook-active text-white focus:ring-facebook shadow-facebook border-0 font-semibold'
   };
 
   const sizeClasses = {
-    small: 'px-3 py-1.5 text-sm',
-    medium: 'px-4 py-2 text-sm',
-    large: 'px-6 py-3 text-base',
-    xlarge: 'px-8 py-4 text-lg'
+    small: 'px-3 py-1.5 text-sm min-h-[32px]',
+    medium: 'px-4 py-2 text-sm min-h-[36px]',
+    large: 'px-6 py-3 text-base min-h-[40px]',
+    xlarge: 'px-8 py-4 text-lg min-h-[44px]'
   };
 
   const iconSizes = {
@@ -79,10 +80,60 @@ const Button = ({
   );
 };
 
+// Composant FacebookButton - Style exact de Facebook
+export const FacebookButton = ({
+  children,
+  size = 'medium',
+  disabled = false,
+  loading = false,
+  fullWidth = false,
+  onClick,
+  className = '',
+  ...props
+}) => {
+  const sizeClasses = {
+    small: 'px-4 py-2 text-sm min-h-[32px]',
+    medium: 'px-6 py-2.5 text-sm min-h-[36px]',
+    large: 'px-8 py-3 text-base min-h-[40px]'
+  };
+
+  const classes = `
+    inline-flex items-center justify-center
+    bg-facebook hover:bg-facebook-hover active:bg-facebook-active
+    text-white font-semibold
+    rounded-md
+    border-0 outline-none
+    transition-all duration-150 ease-in-out
+    focus:ring-2 focus:ring-facebook focus:ring-offset-2
+    disabled:opacity-60 disabled:cursor-not-allowed
+    shadow-facebook hover:shadow-facebook-hover
+    ${sizeClasses[size]}
+    ${fullWidth ? 'w-full' : ''}
+    ${className}
+  `.trim();
+
+  return (
+    <button
+      type="button"
+      className={classes}
+      disabled={disabled || loading}
+      onClick={onClick}
+      {...props}
+    >
+      {loading && (
+        <div className="mr-2">
+          <Spinner size="small" color="white" />
+        </div>
+      )}
+      {children}
+    </button>
+  );
+};
+
 // Composant ButtonGroup
 export const ButtonGroup = ({ children, className = '' }) => {
   return (
-    <div className={`inline-flex rounded-lg shadow-sm ${className}`} role="group">
+    <div className={`inline-flex rounded-md shadow-sm ${className}`} role="group">
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
           const isFirst = index === 0;
@@ -112,7 +163,7 @@ export const IconButton = ({
   ...props 
 }) => {
   const sizeClasses = {
-    small: 'p-1',
+    small: 'p-1.5',
     medium: 'p-2',
     large: 'p-3'
   };

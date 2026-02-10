@@ -1,20 +1,103 @@
-@import 'primereact/resources/themes/lara-light-blue/theme.css';
-@import 'primereact/resources/primereact.min.css';
-@import 'primeicons/primeicons.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles to ensure Tailwind is working */
+/* Couleurs Facebook exactes */
 @layer base {
+  :root {
+    --facebook: #1877f2;
+    --facebook-hover: #166fe5;
+    --facebook-active: #1464cc;
+  }
+  
+  /* Thème par défaut - Dark */
   body {
-    @apply font-sans antialiased;
+    background-color: #000000;
+    color: #ffffff;
   }
 }
 
-@layer components {
-  .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors;
+@layer utilities {
+  /* Couleurs Facebook */
+  .bg-facebook {
+    background-color: var(--facebook);
+  }
+  
+  .bg-facebook-hover {
+    background-color: var(--facebook-hover);
+  }
+  
+  .bg-facebook-active {
+    background-color: var(--facebook-active);
+  }
+  
+  .text-facebook {
+    color: var(--facebook);
+  }
+  
+  .border-facebook {
+    border-color: var(--facebook);
+  }
+  
+  .ring-facebook {
+    --tw-ring-color: var(--facebook);
+  }
+  
+  .shadow-facebook {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shadow-facebook-hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Thème Dark (par défaut) */
+  .theme-dark {
+    background-color: #000000;
+    color: #ffffff;
+  }
+  
+  .theme-dark .bg-card {
+    background-color: #1a1a1a;
+    border-color: #333333;
+  }
+  
+  .theme-dark .bg-input {
+    background-color: #2a2a2a;
+    border-color: #404040;
+    color: #ffffff;
+  }
+  
+  .theme-dark .text-muted {
+    color: #a0a0a0;
+  }
+  
+  .theme-dark .border-default {
+    border-color: #333333;
+  }
+  
+  /* Thème Light */
+  .theme-light {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  .theme-light .bg-card {
+    background-color: #ffffff;
+    border-color: #e5e5e5;
+  }
+  
+  .theme-light .bg-input {
+    background-color: #ffffff;
+    border-color: #d1d5db;
+    color: #000000;
+  }
+  
+  .theme-light .text-muted {
+    color: #6b7280;
+  }
+  
+  .theme-light .border-default {
+    border-color: #e5e5e5;
   }
 }

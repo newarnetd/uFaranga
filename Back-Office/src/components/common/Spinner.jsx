@@ -10,30 +10,23 @@ const Spinner = ({
 }) => {
   const sizeClasses = {
     small: 'w-4 h-4',
-    medium: 'w-8 h-8',
-    large: 'w-12 h-12',
-    xlarge: 'w-16 h-16'
+    medium: 'w-5 h-5',
+    large: 'w-6 h-6',
+    xlarge: 'w-8 h-8'
   };
 
   const colorClasses = {
-    primary: 'border-blue-600',
-    secondary: 'border-gray-600',
-    success: 'border-green-600',
-    warning: 'border-yellow-600',
-    danger: 'border-red-600',
-    white: 'border-white'
+    primary: 'text-blue-600',
+    secondary: 'text-gray-600',
+    success: 'text-green-600',
+    warning: 'text-yellow-600',
+    danger: 'text-red-600',
+    white: 'text-white'
   };
 
   const spinnerElement = (
     <div className={`spinner-container ${overlay ? 'spinner-overlay' : ''} ${className}`}>
-      <div 
-        className={`
-          spinner 
-          ${sizeClasses[size]} 
-          ${colorClasses[color]}
-          border-4 border-t-transparent rounded-full animate-spin
-        `}
-      />
+      <div className={`spinner-radial ${sizeClasses[size]} ${colorClasses[color]}`}></div>
       {text && (
         <p className={`spinner-text mt-2 text-sm ${color === 'white' ? 'text-white' : 'text-gray-600'}`}>
           {text}
@@ -51,6 +44,33 @@ const Spinner = ({
   }
 
   return spinnerElement;
+};
+
+// Composant RadialSpinner - Style moderne avec barres radiales
+export const RadialSpinner = ({ 
+  size = 'medium', 
+  color = 'primary', 
+  className = '' 
+}) => {
+  const sizeClasses = {
+    small: 'w-4 h-4',
+    medium: 'w-5 h-5',
+    large: 'w-6 h-6',
+    xlarge: 'w-8 h-8'
+  };
+
+  const colorClasses = {
+    primary: 'text-blue-600',
+    secondary: 'text-gray-600',
+    success: 'text-green-600',
+    warning: 'text-yellow-600',
+    danger: 'text-red-600',
+    white: 'text-white'
+  };
+
+  return (
+    <div className={`spinner-radial ${sizeClasses[size]} ${colorClasses[color]} ${className}`}></div>
+  );
 };
 
 // Composant Spinner avec points
