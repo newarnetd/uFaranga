@@ -94,19 +94,38 @@ logging:
 
 # Configuration spécifique à l'application
 app:
+  services:
+    user-service:
+      url: ${USER_SERVICE_URL:http://localhost:8000}
+    wallet-service:
+      url: ${WALLET_SERVICE_URL:http://localhost:8001}
+    kyc-service:
+      url: ${KYC_SERVICE_URL:http://localhost:8002}
+    notification-service:
+      url: ${NOTIFICATION_SERVICE_URL:http://localhost:3001}
+    fraud-detection-service:
+      url: ${FRAUD_DETECTION_SERVICE_URL:http://localhost:9001}
+    api-gateway:
+      url: ${API_GATEWAY_URL:http://localhost:3000}
+    websocket-service:
+      url: ${WEBSOCKET_SERVICE_URL:http://localhost:3002}
+  
+  timeouts:
+    default: ${DEFAULT_TIMEOUT:5000}
+    transaction: ${TRANSACTION_TIMEOUT:10000}
+    fraud-check: ${FRAUD_CHECK_TIMEOUT:3000}
+  
+  limits:
+    max-transaction-amount: ${MAX_TRANSACTION_AMOUNT:1000000}
+    max-daily-amount: ${MAX_DAILY_AMOUNT:10000}
+    max-monthly-transactions: ${MAX_MONTHLY_TRANSACTIONS:1000}
+  
   transaction:
-    max-amount: 1000000
-    default-currency: USD
     processing-timeout: 300000 # 5 minutes
+    default-currency: USD
   
   fraud-detection:
     enabled: true
-    max-daily-amount: 10000
-    max-transaction-amount: 5000
-  
-  wallet-service:
-    url: http://localhost:8001
-    timeout: 5000
 
 resilience4j:
   circuitbreaker:
@@ -163,8 +182,21 @@ spring:
       host: redis
 
 app:
-  wallet-service:
-    url: http://wallet-service:8000
+  services:
+    user-service:
+      url: http://user-service:8000
+    wallet-service:
+      url: http://wallet-service:8000
+    kyc-service:
+      url: http://kyc-service:8000
+    notification-service:
+      url: http://notification-service:3001
+    fraud-detection-service:
+      url: http://fraud-detection-service:9000
+    api-gateway:
+      url: http://api-gateway:3000
+    websocket-service:
+      url: http://websocket-service:3002
 
 ---
 # Profil de production
