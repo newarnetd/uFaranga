@@ -1,0 +1,184 @@
+spring:
+  application:
+    name: transaction-service
+  
+  profiles:
+    active: development
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ufaranga_transactions
+    username: admin
+    password: secret123
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
+  
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+    consumer:
+      group-id: transaction-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "com.ufaranga.transaction"
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+  
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8000/auth
+
+server:
+  port: 9000
+  servlet:
+    context-path: /api/v1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+logging:
+  level:
+    com.ufaranga.transaction: INFO
+    org.springframework.kafka: WARN
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/transaction-service.log
+
+# Configuration spécifique à l'application
+app:
+  transaction:
+    max-amount: 1000000
+    default-currency: USD
+    processing-timeout: 300000 # 5 minutes
+  
+  fraud-detection:
+    enabled: true
+    max-daily-amount: 10000
+    max-transaction-amount: 5000
+  
+  wallet-service:
+    url: http://localhost:8001
+    timeout: 5000
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      wallet-service:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        wait-duration-in-open-state: 30s
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+  
+  retry:
+    instances:
+      wallet-service:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+
+---
+# Profil de développement
+spring:
+  config:
+    activate:
+      on-profile: development
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    com.ufaranga.transaction: DEBUG
+    org.springframework.web: DEBUG
+
+---
+# Profil Docker
+spring:
+  config:
+    activate:
+      on-profile: docker
+  
+  datasource:
+    url: jdbc:postgresql://postgres:5432/ufaranga_transactions
+  
+  kafka:
+    bootstrap-servers: kafka:29092
+  
+  data:
+    redis:
+      host: redis
+
+app:
+  wallet-service:
+    url: http://wallet-service:8000
+
+---
+# Profil de production
+spring:
+  config:
+    activate:
+      on-profile: production
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+logging:
+  level:
+    com.ufaranga.transaction: WARN
+    org.springframework.web: WARN

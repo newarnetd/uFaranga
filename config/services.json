@@ -1,0 +1,68 @@
+{
+  "project": {
+    "name": "uFaranga",
+    "version": "1.0.0",
+    "description": "Plateforme de paiement mobile - Architecture microservices"
+  },
+  "environments": {
+    "development": {
+      "domain": "localhost",
+      "protocol": "http"
+    },
+    "staging": {
+      "domain": "staging.ufaranga.com",
+      "protocol": "https"
+    },
+    "production": {
+      "domain": "api.ufaranga.com",
+      "protocol": "https"
+    }
+  },
+  "services": {
+    "frontend": {
+      "back-office": {
+        "name": "Back Office",
+        "description": "Interface d'administration React + Vite",
+        "port": 3000,
+        "path": "/admin",
+        "technology": "React + Vite",
+        "urls": {
+          "development": "http://localhost:3000",
+          "staging": "https://admin-staging.ufaranga.com",
+          "production": "https://admin.ufaranga.com"
+        }
+      },
+      "front-office": {
+        "name": "Front Office",
+        "description": "Application web client Next.js",
+        "port": 3001,
+        "path": "/",
+        "technology": "Next.js",
+        "urls": {
+          "development": "http://localhost:3001",
+          "staging": "https://app-staging.ufaranga.com",
+          "production": "https://app.ufaranga.com"
+        }
+      },
+      "mobile": {
+        "name": "Mobile App",
+        "description": "Application mobile Flutter",
+        "technology": "Flutter",
+        "platforms": ["Android", "iOS", "Web"],
+        "urls": {
+          "web": "http://localhost:3002"
+        }
+      }
+    },
+    "backend": {
+      "node-services": {
+        "api-gateway": {
+          "name": "API Gateway",
+          "description": "Point d'entrée unique, routage, authentification",
+          "port": 3000,
+          "path": "/api/v1",
+          "technology": "Node.js + Express",
+          "urls": {
+            "development": "http://localhost:3000",
+            "staging": "https://gateway-staging.ufaranga.com",
+            "production": "https://api.ufar
