@@ -157,7 +157,7 @@ const Support = () => {
             </Link>
             <a
               href="tel:+25779000000"
-              className="px-8 py-4 bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 font-semibold rounded-lg border-2 border-blue-600 hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
+              className="px-8 py-4 text-blue-600 dark:text-blue-400 font-semibold rounded-lg border-2 border-blue-600 hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
             >
               Appelez-nous
             </a>

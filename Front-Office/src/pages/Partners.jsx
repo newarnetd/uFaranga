@@ -117,7 +117,7 @@ const Partners = () => {
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
             Contactez-nous
           </h2>
-          <div className="max-w-2xl mx-auto bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg">
+          <div className="max-w-2xl mx-auto p-8 rounded-xl shadow-lg">
             <form className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <input

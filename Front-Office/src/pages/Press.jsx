@@ -97,7 +97,7 @@ const Press = () => {
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
             Pour toute demande média, contactez notre équipe communication
           </p>
-          <div className="max-w-md mx-auto bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg">
+          <div className="max-w-md mx-auto p-8 rounded-lg shadow-lg">
             <p className="text-foreground mb-2">
               <strong>Email:</strong> presse@ufaranga.com
             </p>

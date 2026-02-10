@@ -12,7 +12,7 @@ const About = () => {
         </div>
       </section>
 
-      <section className="py-16 bg-white dark:bg-gray-900">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
             uFaranga en chiffres
@@ -46,7 +46,7 @@ const About = () => {
               { title: 'Innovation', desc: 'Toujours à la pointe' },
               { title: 'Africanité', desc: 'Fiers d\'être africains' },
             ].map((value, index) => (
-              <div key={index} className="text-center p-6 bg-white dark:bg-gray-900 rounded-xl">
+              <div key={index} className="text-center p-6 rounded-xl">
                 <h3 className="text-lg font-bold mb-2 text-foreground">{value.title}</h3>
                 <p className="text-gray-600 dark:text-gray-400 text-sm">{value.desc}</p>
               </div>
