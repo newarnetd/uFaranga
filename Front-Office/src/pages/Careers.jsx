@@ -1,24 +1,28 @@
-import React from 'react';
+import { 
+  Briefcase, Users, TrendingUp, Heart, Zap, Globe,
+  Code, Palette, BarChart3, Headphones, MapPin, Clock,
+  CheckCircle, ArrowRight, Award, Target, Rocket
+} from 'lucide-react';
 
 const Careers = () => {
   const values = [
     {
-      icon: '🚀',
+      icon: Rocket,
       title: 'Innovation',
       description: 'Nous repoussons les limites de la fintech africaine'
     },
     {
-      icon: '🤝',
+      icon: Users,
       title: 'Collaboration',
       description: 'Ensemble, nous construisons l\'avenir'
     },
     {
-      icon: '🌍',
+      icon: Heart,
       title: 'Impact',
       description: 'Nous changeons des vies à travers l\'Afrique'
     },
     {
-      icon: '📈',
+      icon: TrendingUp,
       title: 'Croissance',
       description: 'Développez vos compétences avec nous'
     }
@@ -26,10 +30,11 @@ const Careers = () => {
 
   const jobs = [
     {
-      title: 'Développeur Full Stack',
+      title: 'Développeur Full Stack Senior',
       department: 'Engineering',
       location: 'Bujumbura, Burundi',
       type: 'CDI',
+      icon: Code,
       description: 'Rejoignez notre équipe technique pour construire la prochaine génération de services financiers.'
     },
     {
@@ -37,6 +42,7 @@ const Careers = () => {
       department: 'Product',
       location: 'Bujumbura, Burundi',
       type: 'CDI',
+      icon: Target,
       description: 'Définissez la vision produit et guidez le développement de nouvelles fonctionnalités.'
     },
     {
@@ -44,6 +50,7 @@ const Careers = () => {
       department: 'Design',
       location: 'Remote',
       type: 'CDI',
+      icon: Palette,
       description: 'Créez des expériences utilisateur exceptionnelles pour nos millions d\'utilisateurs.'
     },
     {
@@ -51,6 +58,7 @@ const Careers = () => {
       department: 'Support',
       location: 'Bujumbura, Burundi',
       type: 'CDI',
+      icon: Headphones,
       description: 'Assurez la satisfaction de nos clients entreprises et agents.'
     },
     {
@@ -58,6 +66,7 @@ const Careers = () => {
       department: 'Data',
       location: 'Bujumbura / Remote',
       type: 'CDI',
+      icon: BarChart3,
       description: 'Analysez les données pour optimiser nos services et prendre des décisions éclairées.'
     },
     {
@@ -65,51 +74,79 @@ const Careers = () => {
       department: 'Marketing',
       location: 'Bujumbura, Burundi',
       type: 'CDI',
+      icon: Globe,
       description: 'Développez notre marque et notre présence sur le marché africain.'
     }
   ];
 
   const benefits = [
-    '💰 Salaire compétitif',
-    '🏥 Assurance santé',
-    '🌴 Congés payés généreux',
-    '📚 Formation continue',
-    '💻 Équipement moderne',
-    '🏠 Télétravail flexible',
-    '🎯 Stock options',
-    '🍕 Repas d\'équipe'
+    { icon: '💰', title: 'Salaire compétitif', description: 'Rémunération au-dessus du marché' },
+    { icon: '🏥', title: 'Assurance santé', description: 'Couverture complète pour vous et votre famille' },
+    { icon: '🌴', title: 'Congés généreux', description: '25 jours de congés payés par an' },
+    { icon: '📚', title: 'Formation continue', description: 'Budget formation et conférences' },
+    { icon: '💻', title: 'Équipement moderne', description: 'MacBook Pro et setup ergonomique' },
+    { icon: '🏠', title: 'Télétravail flexible', description: 'Travaillez d\'où vous voulez' },
+    { icon: '🎯', title: 'Stock options', description: 'Participez à notre succès' },
+    { icon: '🍕', title: 'Team building', description: 'Événements et repas d\'équipe réguliers' }
+  ];
+
+  const stats = [
+    { value: '50+', label: 'Employés' },
+    { value: '15', label: 'Nationalités' },
+    { value: '40%', label: 'Femmes' },
+    { value: '28', label: 'Âge moyen' }
   ];
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-black">
       {/* Hero Section */}
-      <section className="bg-secondary text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-4">Rejoignez l'aventure uFaranga</h1>
-          <p className="text-xl mb-8">
-            Construisons ensemble l'avenir de la finance en Afrique
-          </p>
-          <a
-            href="#jobs"
-            className="inline-block px-8 py-4 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            Voir les postes ouverts
-          </a>
+      <section className="py-20 bg-gradient-to-b from-secondary/10 to-black">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 bg-secondary/20 text-secondary px-4 py-2 rounded-full mb-6">
+              <Briefcase className="w-5 h-5" />
+              <span className="font-semibold">Carrières</span>
+            </div>
+            <h1 className="text-5xl lg:text-6xl font-anton uppercase mb-6">
+              REJOIGNEZ L'AVENTURE UFARANGA
+            </h1>
+            <p className="text-xl text-gray-300 mb-8">
+              Construisons ensemble l'avenir de la finance en Afrique
+            </p>
+            <a
+              href="#jobs"
+              className="inline-block bg-white text-black px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            >
+              Voir les postes ouverts
+            </a>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-12">
+            {stats.map((stat, idx) => (
+              <div key={idx} className="border border-gray-800 rounded-xl p-6 text-center hover:border-secondary/50 transition-colors">
+                <div className="text-3xl font-anton text-secondary mb-1">{stat.value}</div>
+                <div className="text-sm text-gray-400">{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Values */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
-            Nos valeurs
+          <h2 className="text-4xl font-anton uppercase text-center mb-12">
+            NOS VALEURS
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {values.map((value, index) => (
-              <div key={index} className="text-center">
-                <div className="text-5xl mb-4">{value.icon}</div>
-                <h3 className="text-xl font-bold mb-2 text-foreground">{value.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400">{value.description}</p>
+              <div key={index} className="border border-gray-800 rounded-xl p-6 text-center hover:border-secondary/50 transition-colors">
+                <div className="w-14 h-14 rounded-xl bg-secondary/10 flex items-center justify-center mx-auto mb-4">
+                  <value.icon className="w-7 h-7 text-secondary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
+                <p className="text-gray-400 text-sm">{value.description}</p>
               </div>
             ))}
           </div>
@@ -117,18 +154,17 @@ const Careers = () => {
       </section>
 
       {/* Benefits */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800">
+      <section className="py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
-            Avantages
+          <h2 className="text-4xl font-anton uppercase text-center mb-12">
+            AVANTAGES
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {benefits.map((benefit, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center"
-              >
-                <p className="text-foreground font-medium">{benefit}</p>
+              <div key={index} className="border border-gray-800 rounded-xl p-6 hover:border-secondary/50 transition-colors">
+                <div className="text-4xl mb-4">{benefit.icon}</div>
+                <h3 className="font-semibold mb-2">{benefit.title}</h3>
+                <p className="text-gray-400 text-sm">{benefit.description}</p>
               </div>
             ))}
           </div>
@@ -136,37 +172,50 @@ const Careers = () => {
       </section>
 
       {/* Jobs */}
-      <section id="jobs" className="py-16">
+      <section id="jobs" className="py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
-            Postes ouverts ({jobs.length})
+          <h2 className="text-4xl font-anton uppercase text-center mb-4">
+            POSTES OUVERTS
           </h2>
-          <div className="max-w-4xl mx-auto space-y-6">
+          <p className="text-center text-gray-400 mb-12">{jobs.length} opportunités disponibles</p>
+          
+          <div className="max-w-5xl mx-auto space-y-6">
             {jobs.map((job, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800 hover:shadow-xl transition-shadow"
+                className="border border-gray-800 rounded-xl p-6 hover:border-secondary/50 transition-colors group"
               >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                  <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-2">{job.title}</h3>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm">
-                        {job.department}
-                      </span>
-                      <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm">
-                        {job.type}
-                      </span>
-                      <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm">
-                        📍 {job.location}
-                      </span>
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+                  <div className="flex-1">
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                        <job.icon className="w-6 h-6 text-secondary" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-semibold mb-3 group-hover:text-secondary transition-colors">
+                          {job.title}
+                        </h3>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold">
+                            {job.department}
+                          </span>
+                          <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-semibold">
+                            {job.type}
+                          </span>
+                          <span className="px-3 py-1 border border-gray-800 rounded-full text-xs font-semibold flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            {job.location}
+                          </span>
+                        </div>
+                        <p className="text-gray-400">{job.description}</p>
+                      </div>
                     </div>
                   </div>
-                  <button className="mt-4 md:mt-0 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                  <button className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors whitespace-nowrap inline-flex items-center gap-2">
                     Postuler
+                    <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>
-                <p className="text-gray-600 dark:text-gray-400">{job.description}</p>
               </div>
             ))}
           </div>
@@ -174,18 +223,22 @@ const Careers = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-secondary text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Vous ne trouvez pas le poste idéal ?</h2>
-          <p className="text-xl mb-8">
-            Envoyez-nous votre candidature spontanée
-          </p>
-          <a
-            href="mailto:careers@ufaranga.com"
-            className="inline-block px-8 py-4 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            Candidature spontanée
-          </a>
+      <section className="py-20 bg-gradient-to-b from-black to-secondary/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl font-anton uppercase mb-6">
+              VOUS NE TROUVEZ PAS LE POSTE IDÉAL ?
+            </h2>
+            <p className="text-xl text-gray-300 mb-8">
+              Envoyez-nous votre candidature spontanée
+            </p>
+            <a
+              href="mailto:careers@ufaranga.bi"
+              className="inline-block bg-white text-black px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            >
+              Candidature spontanée
+            </a>
+          </div>
         </div>
       </section>
     </div>

@@ -19,6 +19,14 @@ import Security from './pages/Security';
 import Legal from './pages/Legal';
 import Press from './pages/Press';
 import Partners from './pages/Partners';
+import PartnersList from './pages/PartnersList';
+import SDKs from './pages/SDKs';
+import Impact from './pages/Impact';
+import Affiliation from './pages/Affiliation';
+import Contact from './pages/Contact';
+import Actualites from './pages/Actualites';
+import Team from './pages/Team';
+import Sandbox from './pages/Sandbox';
 import NotFound from './pages/NotFound';
 
 // Produits - Compte & Carte
@@ -107,18 +115,27 @@ function App() {
             {/* Blog */}
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/actualites" element={<Actualites />} />
+            <Route path="/actualites/:slug" element={<BlogPost />} />
             
             {/* Support & Ressources */}
             <Route path="/support" element={<Support />} />
             <Route path="/developpeurs" element={<Developers />} />
+            <Route path="/sandbox" element={<Sandbox />} />
+            <Route path="/sdks" element={<SDKs />} />
             
             {/* Entreprise */}
             <Route path="/a-propos" element={<About />} />
+            <Route path="/equipe" element={<Team />} />
             <Route path="/carrieres" element={<Careers />} />
             <Route path="/securite" element={<Security />} />
             <Route path="/legal" element={<Legal />} />
             <Route path="/presse" element={<Press />} />
             <Route path="/partenaires" element={<Partners />} />
+            <Route path="/partenaires/liste" element={<PartnersList />} />
+            <Route path="/impact" element={<Impact />} />
+            <Route path="/affiliation" element={<Affiliation />} />
+            <Route path="/contact" element={<Contact />} />
             
             {/* 404 */}
             <Route path="*" element={<NotFound />} />

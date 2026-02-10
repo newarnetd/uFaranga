@@ -1,42 +1,47 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { 
+  CreditCard, Send, Shield, Smartphone, PiggyBank, 
+  Building2, Search, Phone, Mail, MessageCircle,
+  ChevronDown
+} from 'lucide-react';
 
 const Support = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
     {
-      icon: '💳',
+      icon: CreditCard,
       title: 'Compte et Carte',
       description: 'Gérer votre compte et votre carte',
       articles: 12
     },
     {
-      icon: '💸',
+      icon: Send,
       title: 'Transferts',
       description: 'Envoyer et recevoir de l\'argent',
       articles: 8
     },
     {
-      icon: '🔒',
+      icon: Shield,
       title: 'Sécurité',
       description: 'Protéger votre compte',
       articles: 15
     },
     {
-      icon: '📱',
+      icon: Smartphone,
       title: 'Application Mobile',
       description: 'Utiliser l\'app uFaranga',
       articles: 10
     },
     {
-      icon: '💰',
+      icon: PiggyBank,
       title: 'Épargne',
       description: 'Gérer votre épargne',
       articles: 6
     },
     {
-      icon: '🏢',
+      icon: Building2,
       title: 'Business',
       description: 'Solutions pour entreprises',
       articles: 9
@@ -63,12 +68,14 @@ const Support = () => {
   ];
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-black">
       {/* Hero Section */}
-      <section className="bg-primary text-white py-20">
+      <section className="py-20 bg-gradient-to-b from-primary/10 to-black">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-4">Comment pouvons-nous vous aider ?</h1>
-          <p className="text-xl mb-8">Trouvez rapidement des réponses à vos questions</p>
+          <h1 className="text-5xl lg:text-6xl font-anton uppercase mb-6">
+            COMMENT POUVONS-NOUS VOUS AIDER ?
+          </h1>
+          <p className="text-xl text-gray-300 mb-8">Trouvez rapidement des réponses à vos questions</p>
           
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto">
@@ -78,12 +85,10 @@ const Support = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Recherchez dans notre base de connaissances..."
-                className="w-full px-6 py-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-6 py-4 pr-12 rounded-lg bg-black border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-primary transition-colors"
               />
-              <button className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+              <button className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition-colors">
+                <Search className="w-6 h-6" />
               </button>
             </div>
           </div>
@@ -91,23 +96,27 @@ const Support = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
-            Parcourir par catégorie
+          <h2 className="text-4xl font-anton uppercase text-center mb-4">
+            PARCOURIR PAR CATÉGORIE
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <p className="text-center text-gray-400 mb-12">Trouvez l'aide dont vous avez besoin</p>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {categories.map((category, index) => (
               <Link
                 key={index}
                 to={`/support/${category.title.toLowerCase().replace(/\s+/g, '-')}`}
-                className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-800"
+                className="border border-gray-800 p-6 rounded-xl hover:border-primary/50 transition-colors group"
               >
-                <div className="text-4xl mb-4">{category.icon}</div>
-                <h3 className="text-xl font-bold mb-2 text-foreground">{category.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">{category.description}</p>
-                <span className="text-sm text-blue-600 dark:text-blue-400">
-                  {category.articles} articles
+                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                  <category.icon className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{category.title}</h3>
+                <p className="text-gray-400 mb-4">{category.description}</p>
+                <span className="text-sm text-primary font-semibold">
+                  {category.articles} articles →
                 </span>
               </Link>
             ))}
@@ -116,21 +125,24 @@ const Support = () => {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800">
+      <section className="py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
-            Questions fréquentes
+          <h2 className="text-4xl font-anton uppercase text-center mb-4">
+            QUESTIONS FRÉQUENTES
           </h2>
+          <p className="text-center text-gray-400 mb-12">Les réponses aux questions les plus posées</p>
+          
           <div className="max-w-3xl mx-auto space-y-4">
             {faqs.map((faq, index) => (
               <details
                 key={index}
-                className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden"
+                className="border border-gray-800 rounded-xl overflow-hidden hover:border-primary/50 transition-colors group"
               >
-                <summary className="px-6 py-4 cursor-pointer font-semibold text-foreground hover:bg-gray-50 dark:hover:bg-gray-800">
-                  {faq.question}
+                <summary className="px-6 py-4 cursor-pointer font-semibold flex items-center justify-between hover:bg-gray-900/50 transition-colors">
+                  <span>{faq.question}</span>
+                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
                 </summary>
-                <div className="px-6 pb-4 text-gray-600 dark:text-gray-400">
+                <div className="px-6 pb-4 text-gray-400 border-t border-gray-800 pt-4">
                   {faq.answer}
                 </div>
               </details>
@@ -139,28 +151,63 @@ const Support = () => {
         </div>
       </section>
 
-      {/* Contact CTA */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4 text-foreground">
-            Vous ne trouvez pas ce que vous cherchez ?
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-            Notre équipe est là pour vous aider
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/support/contact"
-              className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Contactez-nous
-            </Link>
+      {/* Contact Options */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="text-4xl font-anton uppercase mb-4">
+              VOUS NE TROUVEZ PAS CE QUE VOUS CHERCHEZ ?
+            </h2>
+            <p className="text-xl text-gray-400">
+              Notre équipe est là pour vous aider 24/7
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
             <a
               href="tel:+25779000000"
-              className="px-8 py-4 text-blue-600 dark:text-blue-400 font-semibold rounded-lg border-2 border-blue-600 hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
+              className="border border-gray-800 rounded-xl p-6 text-center hover:border-primary/50 transition-colors group"
             >
-              Appelez-nous
+              <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
+                <Phone className="w-7 h-7 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Appelez-nous</h3>
+              <p className="text-gray-400 text-sm mb-3">Disponible 24/7</p>
+              <p className="text-primary font-semibold">+257 79 000 000</p>
             </a>
+
+            <a
+              href="mailto:support@ufaranga.bi"
+              className="border border-gray-800 rounded-xl p-6 text-center hover:border-primary/50 transition-colors group"
+            >
+              <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
+                <Mail className="w-7 h-7 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Envoyez un email</h3>
+              <p className="text-gray-400 text-sm mb-3">Réponse sous 24h</p>
+              <p className="text-primary font-semibold">support@ufaranga.bi</p>
+            </a>
+
+            <Link
+              to="/support/chat"
+              className="border border-gray-800 rounded-xl p-6 text-center hover:border-primary/50 transition-colors group"
+            >
+              <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
+                <MessageCircle className="w-7 h-7 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Chat en direct</h3>
+              <p className="text-gray-400 text-sm mb-3">Réponse immédiate</p>
+              <p className="text-primary font-semibold">Démarrer le chat →</p>
+            </Link>
+          </div>
+
+          <div className="text-center">
+            <Link
+              to="/support/contact"
+              className="inline-block bg-white text-black px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            >
+              Formulaire de contact complet
+            </Link>
           </div>
         </div>
       </section>
