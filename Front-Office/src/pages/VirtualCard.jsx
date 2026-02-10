@@ -21,13 +21,14 @@ const VirtualCard = () => {
       balance: 150000,
       currency: 'BIF',
       status: 'active',
-      type: 'visa',
+      type: 'uFaranga Card',
       color: 'from-blue-600 to-blue-800'
     }
   ]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newCardName, setNewCardName] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
+  const [modalStep, setModalStep] = useState(0);
   
   // Form data for account creation
   const [formData, setFormData] = useState({
@@ -39,6 +40,7 @@ const VirtualCard = () => {
     confirmPassword: '',
     country: 'Burundi',
     language: 'Français',
+    cardName: '',
     acceptTerms: false
   });
 
@@ -48,6 +50,27 @@ const VirtualCard = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+  };
+
+  const nextModalStep = () => {
+    setModalStep((prev) => Math.min(prev + 1, 3));
+  };
+
+  const prevModalStep = () => {
+    setModalStep((prev) => Math.max(prev - 1, 0));
+  };
+
+  const canProceedStep = () => {
+    switch(modalStep) {
+      case 0:
+        return formData.firstName && formData.lastName && formData.phone;
+      case 1:
+        return formData.password && formData.password === formData.confirmPassword;
+      case 2:
+        return formData.cardName && formData.acceptTerms;
+      default:
+        return true;
+    }
   };
 
   const accountCreationSteps = [
@@ -874,50 +897,241 @@ const VirtualCard = () => {
         </div>
       </section>
 
-      {/* Create Card Modal */}
+      {/* Create Card Modal - FULL ACCOUNT CREATION FORM */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-2xl max-w-md w-full p-8">
-            <h3 className="text-2xl font-anton uppercase mb-6">CRÉER UNE NOUVELLE CARTE</h3>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-gray-900 rounded-2xl max-w-2xl w-full p-8 my-8">
+            <h3 className="text-2xl font-anton uppercase mb-2">CRÉER UNE NOUVELLE CARTE</h3>
+            <p className="text-gray-400 mb-6">Remplissez vos informations pour créer votre compte bancaire virtuel</p>
             
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Nom de la carte
-              </label>
-              <input
-                type="text"
-                value={newCardName}
-                onChange={(e) => setNewCardName(e.target.value)}
-                placeholder="Ex: Carte Netflix, Carte Shopping..."
-                className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary"
-              />
-            </div>
+            <form className="space-y-4">
+              {/* Name Fields */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    <User className="w-4 h-4 inline mr-2" />
+                    Prénom <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    placeholder="Jean"
+                    className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+                    required
+                  />
+                </div>
 
-            <div className="bg-black rounded-lg p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <div className="text-sm text-gray-400">
-                  Votre carte sera créée instantanément et prête à l'emploi. 
-                  Vous pourrez la recharger depuis votre compte principal.
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    <User className="w-4 h-4 inline mr-2" />
+                    Nom <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    placeholder="Mukiza"
+                    className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+                    required
+                  />
                 </div>
               </div>
-            </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="flex-1 bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={handleCreateCard}
-                disabled={!newCardName.trim()}
-                className="flex-1 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Créer la carte
-              </button>
-            </div>
+              {/* Phone - Highlighted as most important */}
+              <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-4">
+                <label className="block text-sm font-medium text-white mb-2">
+                  <Phone className="w-4 h-4 inline mr-2" />
+                  Numéro de téléphone <span className="text-red-400">*</span>
+                  <span className="ml-2 text-xs bg-secondary/20 text-secondary px-2 py-1 rounded-full">Le plus important</span>
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="+257 79 123 456"
+                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+                  required
+                />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                  <Mail className="w-4 h-4 inline mr-2" />
+                  Email <span className="text-gray-500 text-xs">(Optionnel)</span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="jean.mukiza@example.com"
+                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+                />
+              </div>
+
+              {/* Password Fields */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    <Key className="w-4 h-4 inline mr-2" />
+                    Mot de passe / PIN <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="••••••••"
+                    className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    <Key className="w-4 h-4 inline mr-2" />
+                    Confirmer <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    placeholder="••••••••"
+                    className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Country and Language */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    <Globe className="w-4 h-4 inline mr-2" />
+                    Pays <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary"
+                    required
+                  >
+                    <option value="Burundi">🇧🇮 Burundi</option>
+                    <option value="Rwanda">🇷🇼 Rwanda</option>
+                    <option value="Kenya">🇰🇪 Kenya</option>
+                    <option value="Tanzania">🇹🇿 Tanzania</option>
+                    <option value="Uganda">🇺🇬 Uganda</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    <Globe className="w-4 h-4 inline mr-2" />
+                    Langue <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    name="language"
+                    value={formData.language}
+                    onChange={handleInputChange}
+                    className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary"
+                    required
+                  >
+                    <option value="Français">Français</option>
+                    <option value="English">English</option>
+                    <option value="Kirundi">Kirundi</option>
+                    <option value="Swahili">Swahili</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Card Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                  <CreditCard className="w-4 h-4 inline mr-2" />
+                  Nom de la carte <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={newCardName}
+                  onChange={(e) => setNewCardName(e.target.value)}
+                  placeholder="Ex: Carte Netflix, Carte Shopping..."
+                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+                  required
+                />
+              </div>
+
+              {/* Terms */}
+              <div className="flex items-start gap-3 bg-black rounded-lg p-4">
+                <input
+                  type="checkbox"
+                  name="acceptTerms"
+                  checked={formData.acceptTerms}
+                  onChange={handleInputChange}
+                  className="mt-1"
+                  required
+                />
+                <label className="text-sm text-gray-400">
+                  J'accepte les <Link to="/legal" className="text-primary hover:underline">conditions d'utilisation</Link> et la <Link to="/legal#privacy" className="text-primary hover:underline">politique de confidentialité</Link>
+                </label>
+              </div>
+
+              {/* Info Banner */}
+              <div className="bg-black rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-gray-400">
+                    Votre carte sera créée instantanément et prête à l'emploi. 
+                    Vous pourrez la recharger depuis votre compte principal.
+                  </div>
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setFormData({
+                      firstName: '',
+                      lastName: '',
+                      phone: '',
+                      email: '',
+                      password: '',
+                      confirmPassword: '',
+                      country: 'Burundi',
+                      language: 'Français',
+                      acceptTerms: false
+                    });
+                    setNewCardName('');
+                  }}
+                  className="flex-1 bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (formData.acceptTerms && newCardName.trim() && formData.firstName && formData.lastName && formData.phone && formData.password) {
+                      handleCreateCard();
+                      setShowCreateModal(false);
+                    }
+                  }}
+                  disabled={!formData.acceptTerms || !newCardName.trim() || !formData.firstName || !formData.lastName || !formData.phone || !formData.password}
+                  className="flex-1 bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Créer la carte
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

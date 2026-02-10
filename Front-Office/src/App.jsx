@@ -45,6 +45,17 @@ import API from './pages/API';
 // Autres
 import Download from './pages/Download';
 
+// Solutions
+import Commerce from './pages/solutions/Commerce';
+import Education from './pages/solutions/Education';
+import Health from './pages/solutions/Health';
+import Transport from './pages/solutions/Transport';
+import RealEstate from './pages/solutions/RealEstate';
+import Hospitality from './pages/solutions/Hospitality';
+import OnlinePayments from './pages/solutions/OnlinePayments';
+import RecurringPayments from './pages/solutions/RecurringPayments';
+import International from './pages/solutions/International';
+
 function App() {
   return (
     <ThemeProvider>
@@ -81,6 +92,17 @@ function App() {
             
             {/* Agents */}
             <Route path="/agents" element={<Agents />} />
+            
+            {/* Solutions */}
+            <Route path="/solutions/commerce" element={<Commerce />} />
+            <Route path="/solutions/education" element={<Education />} />
+            <Route path="/solutions/sante" element={<Health />} />
+            <Route path="/solutions/transport" element={<Transport />} />
+            <Route path="/solutions/immobilier" element={<RealEstate />} />
+            <Route path="/solutions/hotellerie" element={<Hospitality />} />
+            <Route path="/solutions/paiements" element={<OnlinePayments />} />
+            <Route path="/solutions/recurrents" element={<RecurringPayments />} />
+            <Route path="/solutions/international" element={<International />} />
             
             {/* Blog */}
             <Route path="/blog" element={<Blog />} />
