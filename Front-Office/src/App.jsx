@@ -64,6 +64,15 @@ import API from './pages/API';
 
 // Agents
 import DepotRetrait from './pages/agents/DepotRetrait';
+import Formation from './pages/agents/Formation';
+import Outils from './pages/agents/Outils';
+import Transferts from './pages/agents/Transferts';
+import Factures from './pages/agents/Factures';
+import Commissions from './pages/agents/Commissions';
+import AgentRecharge from './pages/agents/Recharge';
+import AgentSupport from './pages/agents/Support';
+import Communaute from './pages/agents/Communaute';
+import TrouverAgent from './pages/TrouverAgent';
 
 // Autres
 import Download from './pages/Download';
@@ -136,6 +145,15 @@ function App() {
             {/* Agents */}
             <Route path="/agents" element={<Agents />} />
             <Route path="/agents/depot-retrait" element={<DepotRetrait />} />
+            <Route path="/agents/transferts" element={<Transferts />} />
+            <Route path="/agents/outils" element={<Outils />} />
+            <Route path="/agents/formation" element={<Formation />} />
+            <Route path="/agents/commissions" element={<Commissions />} />
+            <Route path="/agents/factures" element={<Factures />} />
+            <Route path="/agents/recharge" element={<AgentRecharge />} />
+            <Route path="/agents/support" element={<AgentSupport />} />
+            <Route path="/agents/communaute" element={<Communaute />} />
+            <Route path="/trouver-agent" element={<TrouverAgent />} />
             
             {/* Solutions */}
             <Route path="/solutions/commerce" element={<Commerce />} />
