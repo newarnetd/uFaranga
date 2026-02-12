@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Menu } from 'primereact/menu';
 import {
   BarChart, Bar, PieChart, Pie, Cell, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -23,12 +24,92 @@ function Transactions() {
   const [selectedDate, setSelectedDate] = useState({ label: "Aujourd'hui", value: 'today' });
   const [sortField, setSortField] = useState('time');
   const [sortOrder, setSortOrder] = useState(-1);
+  const dt = useRef(null);
+  const menuRef = useRef(null);
 
   // Update time every minute
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
+
+  // Export functions
+  const exportCSV = () => {
+    dt.current.exportCSV();
+  };
+
+  const exportPdf = () => {
+    import('jspdf').then((jsPDF) => {
+      import('jspdf-autotable').then(() => {
+        const doc = new jsPDF.default();
+        
+        const exportColumns = [
+          { title: 'Heure', dataKey: 'time' },
+          { title: 'Type', dataKey: 'type' },
+          { title: 'Client', dataKey: 'clientName' },
+          { title: 'Référence', dataKey: 'ref' },
+          { title: 'Montant', dataKey: 'montant' },
+          { title: 'Commission', dataKey: 'commission' },
+          { title: 'Canal', dataKey: 'canal' },
+          { title: 'Statut', dataKey: 'statut' }
+        ];
+
+        doc.autoTable({
+          columns: exportColumns,
+          body: filteredTransactions,
+          styles: { fontSize: 8 },
+          headStyles: { fillColor: [0, 123, 255] }
+        });
+
+        doc.save('transactions.pdf');
+      });
+    });
+  };
+
+  const exportExcel = () => {
+    import('xlsx').then((xlsx) => {
+      const worksheet = xlsx.utils.json_to_sheet(filteredTransactions);
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excelBuffer = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array'
+      });
+
+      saveAsExcelFile(excelBuffer, 'transactions');
+    });
+  };
+
+  const saveAsExcelFile = (buffer, fileName) => {
+    import('file-saver').then((module) => {
+      if (module && module.default) {
+        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        let EXCEL_EXTENSION = '.xlsx';
+        const data = new Blob([buffer], {
+          type: EXCEL_TYPE
+        });
+
+        module.default.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+      }
+    });
+  };
+
+  const exportMenuItems = [
+    {
+      label: 'Excel',
+      icon: 'pi pi-file-excel',
+      command: () => exportExcel()
+    },
+    {
+      label: 'PDF',
+      icon: 'pi pi-file-pdf',
+      command: () => exportPdf()
+    },
+    {
+      label: 'CSV',
+      icon: 'pi pi-file',
+      command: () => exportCSV()
+    }
+  ];
 
   const dateOptions = [
     { label: "Aujourd'hui", value: 'today' },
@@ -174,8 +255,8 @@ function Transactions() {
   const clientBodyTemplate = (rowData) => {
     return (
       <div>
-        <div className="font-semibold text-text">{rowData.clientName}</div>
-        <div className="text-sm text-gray-400 font-mono">{maskPhone(rowData.client)}</div>
+        <div className="font-semibold text-text whitespace-nowrap">{rowData.clientName}</div>
+        <div className="text-sm text-gray-400 font-mono whitespace-nowrap">{maskPhone(rowData.client)}</div>
       </div>
     );
   };
@@ -241,23 +322,25 @@ function Transactions() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-full overflow-x-hidden">
+    <div className="p-4 md:p-6 space-y-6 w-full max-w-full overflow-x-hidden">
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex-1 min-w-0">
           <h1 className="text-3xl font-anton uppercase text-text truncate">Centre d'Analyse Transactionnel</h1>
           <p className="text-gray-400 mt-1 text-sm md:text-base">
-            {currentTime.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} • {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+            {transactions.length} transactions aujourd'hui • {(totalVolume / 1000000).toFixed(2)}M BIF de volume
           </p>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
           <button className="p-2 hover:bg-card rounded-lg transition-colors" title="Rafraîchir">
             <RefreshCw className="w-5 h-5 text-gray-400 hover:text-text" />
           </button>
+          <Menu model={exportMenuItems} popup ref={menuRef} />
           <Button 
-            label="Exporter CSV" 
+            label="Exporter" 
             icon={<Download className="w-4 h-4 mr-2" />}
+            onClick={(e) => menuRef.current.toggle(e)}
             className="bg-text text-background hover:bg-lightGray px-4 py-2 rounded-lg font-semibold whitespace-nowrap"
           />
         </div>
@@ -333,19 +416,19 @@ function Transactions() {
       </div>
 
       {/* 2. ANALYTICS VISUELS */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 w-full">
         {/* Graphique 1: Volume par heure */}
-        <div className="border border-darkGray bg-card rounded-lg p-6 min-w-0">
-          <h3 className="text-lg font-anton uppercase text-text mb-4 flex items-center gap-2">
-            <BarChart3 className="w-5 h-5" />
+        <div className="border border-darkGray bg-card rounded-lg p-4 md:p-6 min-w-0 overflow-hidden">
+          <h3 className="text-base md:text-lg font-anton uppercase text-text mb-4 flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 md:w-5 md:h-5" />
             Volume par Heure
           </h3>
           <div className="w-full overflow-hidden">
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={volumeByHour}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#343A40" />
-                <XAxis dataKey="heure" stroke="#9ca3af" />
-                <YAxis stroke="#9ca3af" />
+                <XAxis dataKey="heure" stroke="#9ca3af" style={{ fontSize: '12px' }} />
+                <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#181F27', border: '1px solid #343A40', borderRadius: '8px' }}
                   formatter={(value) => `${(value / 1000).toFixed(0)}K BIF`}
@@ -354,64 +437,23 @@ function Transactions() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="mt-3 text-sm text-gray-400">
+          <div className="mt-3 text-xs md:text-sm text-gray-400">
             Pic: 13h avec 420K BIF
           </div>
         </div>
 
-        {/* Graphique 2: Répartition par type */}
-        <div className="border border-darkGray bg-card rounded-lg p-6 min-w-0">
-          <h3 className="text-lg font-anton uppercase text-text mb-4 flex items-center gap-2">
-            <Target className="w-5 h-5" />
-            Répartition par Type
-          </h3>
-          <div className="w-full overflow-hidden">
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie
-                  data={transactionsByType}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percentage }) => `${name} ${percentage}%`}
-                  outerRadius={80}
-                  dataKey="value"
-                >
-                  {transactionsByType.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#181F27', border: '1px solid #343A40', borderRadius: '8px' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-3 space-y-1">
-            {transactionsByType.map((item) => (
-              <div key={item.name} className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-gray-400">{item.name}</span>
-                </div>
-                <span className="text-text font-semibold">{item.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Graphique 3: Évolution 7 jours */}
-        <div className="border border-darkGray bg-card rounded-lg p-6 min-w-0">
-          <h3 className="text-lg font-anton uppercase text-text mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
+        {/* Graphique 2: Évolution 7 jours */}
+        <div className="border border-darkGray bg-card rounded-lg p-4 md:p-6 min-w-0 overflow-hidden">
+          <h3 className="text-base md:text-lg font-anton uppercase text-text mb-4 flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 md:w-5 md:h-5" />
             Évolution 7 Jours
           </h3>
           <div className="w-full overflow-hidden">
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={evolutionLast7Days}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#343A40" />
-                <XAxis dataKey="jour" stroke="#9ca3af" />
-                <YAxis stroke="#9ca3af" />
+                <XAxis dataKey="jour" stroke="#9ca3af" style={{ fontSize: '12px' }} />
+                <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#181F27', border: '1px solid #343A40', borderRadius: '8px' }}
                 />
@@ -425,7 +467,7 @@ function Transactions() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <div className="mt-3 text-sm text-gray-400">
+          <div className="mt-3 text-xs md:text-sm text-gray-400">
             Tendance: +15% cette semaine
           </div>
         </div>
@@ -566,126 +608,136 @@ function Transactions() {
       </div>
 
       {/* 3. TABLEAU INTELLIGENT DES TRANSACTIONS */}
-      <div className="border border-darkGray bg-card rounded-lg overflow-hidden">
-        <div className="p-4 border-b border-darkGray flex items-center justify-between">
-          <h3 className="text-lg font-anton uppercase text-text flex items-center gap-2">
-            <BarChart3 className="w-5 h-5" />
+      <div className="overflow-x-auto rounded-lg border border-darkGray">
+        <div className="p-4 border-b border-darkGray flex items-center justify-between bg-card">
+          <h3 className="text-base md:text-lg font-luckiest text-text flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 md:w-5 md:h-5" />
             Tableau Intelligent des Transactions
           </h3>
-          <div className="flex items-center gap-2 text-sm text-gray-400">
+          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-400">
             <span>{filteredTransactions.length} résultats</span>
           </div>
         </div>
         
-        <div className="w-full overflow-x-auto">
-          <DataTable
-            value={filteredTransactions}
-            paginator
-            rows={10}
-            rowsPerPageOptions={[5, 10, 25, 50]}
-            stripedRows
-            rowHover
-            sortField={sortField}
-            sortOrder={sortOrder}
-            onSort={(e) => {
-              setSortField(e.sortField);
-              setSortOrder(e.sortOrder);
-            }}
-            className="custom-datatable"
-            style={{ width: '100%' }}
-          >
-            <Column 
-              field="time" 
-              header="Heure" 
-              sortable 
-              className="text-text font-mono text-sm"
-              style={{ width: '8%', minWidth: '80px' }}
-            />
-            <Column 
-              field="type" 
-              header="Type" 
-              body={typeBodyTemplate} 
-              sortable 
-              style={{ width: '12%', minWidth: '120px' }}
-            />
-            <Column 
-              field="clientName" 
-              header="Client" 
-              body={clientBodyTemplate} 
-              sortable 
-              style={{ width: '15%', minWidth: '150px' }}
-            />
-            <Column 
-              field="ref" 
-              header="Référence" 
-              sortable 
-              className="text-gray-400 font-mono text-sm"
-              style={{ width: '12%', minWidth: '120px' }}
-            />
-            <Column 
-              field="montant" 
-              header="Montant" 
-              body={montantBodyTemplate} 
-              sortable 
-              style={{ width: '12%', minWidth: '120px' }}
-            />
-            <Column 
-              field="commission" 
-              header="Commission" 
-              body={commissionBodyTemplate} 
-              sortable 
-              style={{ width: '10%', minWidth: '100px' }}
-            />
-            <Column 
-              field="canal" 
-              header="Canal" 
-              sortable 
-              className="text-text text-sm"
-              style={{ width: '8%', minWidth: '80px' }}
-            />
-            <Column 
-              field="riskScore" 
-              header="Risque" 
-              body={riskBodyTemplate} 
-              sortable 
-              style={{ width: '8%', minWidth: '80px' }}
-            />
-            <Column 
-              field="statut" 
-              header="Statut" 
-              body={statutBodyTemplate} 
-              sortable 
-              style={{ width: '10%', minWidth: '100px' }}
-            />
-            <Column 
-              header="Actions" 
-              body={actionsBodyTemplate} 
-              style={{ width: '8%', minWidth: '80px' }}
-            />
-          </DataTable>
-        </div>
+        <DataTable
+          ref={dt}
+          value={filteredTransactions}
+          paginator
+          rows={5}
+          rowsPerPageOptions={[5, 10, 25, 50]}
+          stripedRows
+          rowHover
+          sortField={sortField}
+          sortOrder={sortOrder}
+          onSort={(e) => {
+            setSortField(e.sortField);
+            setSortOrder(e.sortOrder);
+          }}
+          className="custom-datatable"
+          tableStyle={{ minWidth: "80rem", fontSize: "14px" }}
+          scrollable
+          scrollHeight="flex"
+        >
+          <Column 
+            field="time" 
+            header="Heure" 
+            sortable 
+            frozen
+            className="text-text font-mono text-sm"
+            style={{ minWidth: '100px' }}
+          />
+          <Column 
+            field="type" 
+            header="Type" 
+            body={typeBodyTemplate} 
+            sortable 
+            frozen
+            style={{ minWidth: '140px' }}
+          />
+          <Column 
+            field="clientName" 
+            header="Client" 
+            body={clientBodyTemplate} 
+            sortable 
+            frozen
+            style={{ minWidth: '200px' }}
+          />
+          <Column 
+            field="ref" 
+            header="Référence" 
+            sortable 
+            className="text-gray-400 font-mono text-sm"
+            style={{ minWidth: '140px' }}
+          />
+          <Column 
+            field="montant" 
+            header="Montant" 
+            body={montantBodyTemplate} 
+            sortable 
+            style={{ minWidth: '140px' }}
+          />
+          <Column 
+            field="commission" 
+            header="Commission" 
+            body={commissionBodyTemplate} 
+            sortable 
+            style={{ minWidth: '120px' }}
+          />
+          <Column 
+            field="canal" 
+            header="Canal" 
+            sortable 
+            className="text-text text-sm"
+            style={{ minWidth: '90px' }}
+          />
+          <Column 
+            field="riskScore" 
+            header="Risque" 
+            body={riskBodyTemplate} 
+            sortable 
+            frozen
+            alignFrozen="right"
+            style={{ minWidth: '100px' }}
+          />
+          <Column 
+            field="statut" 
+            header="Statut" 
+            body={statutBodyTemplate} 
+            sortable 
+            frozen
+            alignFrozen="right"
+            style={{ minWidth: '120px' }}
+          />
+          <Column 
+            header="Actions" 
+            body={actionsBodyTemplate} 
+            frozen
+            alignFrozen="right"
+            style={{ minWidth: '100px' }}
+          />
+        </DataTable>
       </div>
 
       {/* 6. GESTION AVANCÉE DES INCIDENTS */}
       {failedTransactions.length > 0 && (
-        <div className="border border-red-500/30 bg-red-500/10 rounded-lg p-6">
-          <h3 className="text-lg font-anton uppercase text-text mb-4 flex items-center gap-2">
-            <XCircle className="w-5 h-5 text-red-500" />
+        <div className="border border-darkGray bg-darkGray/30 rounded-lg p-4 md:p-6 w-full">
+          <h3 className="text-base md:text-lg font-anton uppercase text-text mb-4 flex items-center gap-2">
+            <XCircle className="w-4 h-4 md:w-5 md:h-5 text-red-500" />
             Gestion des Incidents ({failedTransactions.length})
           </h3>
           <div className="space-y-3">
             {failedTransactions.map((tx) => (
-              <div key={tx.id} className="bg-darkBlue rounded-lg p-4 flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
+              <div key={tx.id} className="bg-card rounded-lg p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-2 flex-wrap">
                     <span className="text-text font-semibold">{tx.clientName}</span>
                     <span className="text-gray-400 text-sm font-mono">{tx.ref}</span>
                   </div>
-                  <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-4 text-sm flex-wrap">
                     <span className="text-text">{tx.montant.toLocaleString()} BIF</span>
                     <span className="text-gray-400">{tx.time}</span>
                     {tx.errorCode && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="px-2 py-1 bg-red-500/20 text-red-500 rounded font-mono text-xs">
                           {tx.errorCode}
                         </span>
@@ -696,12 +748,12 @@ function Transactions() {
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors text-sm font-semibold">
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button className="px-3 md:px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors text-xs md:text-sm font-semibold whitespace-nowrap">
                     Réessayer
                   </button>
-                  <button className="px-4 py-2 bg-darkGray text-text rounded-lg hover:bg-darkGray/80 transition-colors text-sm font-semibold">
-                    Contacter Support
+                  <button className="px-3 md:px-4 py-2 bg-darkGray text-text rounded-lg hover:bg-darkGray/80 transition-colors text-xs md:text-sm font-semibold whitespace-nowrap">
+                    Support
                   </button>
                 </div>
               </div>

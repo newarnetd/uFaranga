@@ -6,6 +6,11 @@ import AllModulesLayout from './components/AllModulesLayout';
 // Agent Pages
 import AgentDashboard from './pages/agent/AgentDashboard';
 import AgentTransactions from './pages/agent/Transactions';
+import AgentFloat from './pages/agent/Float';
+import AgentRapports from './pages/agent/Rapports';
+import AgentCommissions from './pages/agent/Commissions';
+import AgentNotifications from './pages/agent/Notifications';
+import AgentParametres from './pages/agent/Parametres';
 
 // Admin System Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -26,11 +31,11 @@ function App() {
             {/* Agent Routes */}
             <Route path="/agent/dashboard" element={<AgentDashboard />} />
             <Route path="/agent/transactions" element={<AgentTransactions />} />
-            <Route path="/agent/float" element={<AgentDashboard />} />
-            <Route path="/agent/rapports" element={<AgentDashboard />} />
-            <Route path="/agent/commissions" element={<AgentDashboard />} />
-            <Route path="/agent/notifications" element={<AgentDashboard />} />
-            <Route path="/agent/parametres" element={<AgentDashboard />} />
+            <Route path="/agent/float" element={<AgentFloat />} />
+            <Route path="/agent/rapports" element={<AgentRapports />} />
+            <Route path="/agent/commissions" element={<AgentCommissions />} />
+            <Route path="/agent/notifications" element={<AgentNotifications />} />
+            <Route path="/agent/parametres" element={<AgentParametres />} />
 
             {/* Admin System Routes */}
             <Route path="/admin/dashboard" element={<AdminDashboard />} />

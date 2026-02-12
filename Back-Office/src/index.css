@@ -1,3 +1,6 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,6 +16,7 @@
     --card: #181F27;
     --dark-blue: #000C18;
     --dark-gray: #343A40;
+    --red-color:#8B1538;
   }
   
   /* Police par défaut - Open Sans pour le corps, Josefin Sans pour les titres */
@@ -141,4 +145,28 @@ select option:hover {
   .font-cookie {
     font-family: 'Cookie', cursive;
   }
+  
+}
+
+/* Custom DataTable Scroll */
+.custom-datatable .p-datatable-wrapper {
+  overflow-x: auto;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #181F27;
+  border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #343A40;
+  border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #495057;
 }

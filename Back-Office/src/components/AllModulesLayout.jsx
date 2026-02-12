@@ -106,11 +106,11 @@ function AllModulesLayout({ children, userName = 'Super Admin' }) {
         {/* Top Nav - Hauteur fixe */}
         <div className="h-[160px] flex-shrink-0">
           {/* Logo */}
-          <div className="mt-6 px-4 flex items-center justify-between">
+          <div className="mt-2 px-4 flex items-center justify-between">
             {isSidebarOpen ? (
               <div>
-                <h1 className="text-2xl  text-text" style={{ fontFamily: 'Kaushan Script, cursive' }}>uFaranga</h1>
-                <p className="text-xs text-gray-400 mt-1">Back Office</p>
+                <h1 className="text-3xl  text-text text-secondary" style={{ fontFamily: 'Kaushan Script, cursive' }}>uFaranga</h1>
+                <div className='flex items-center justify-start gap-2'><span className="text-x text-white ">Just </span> <span className="text-xs text-primary"> Money</span></div>
               </div>
             ) : (
               <div className="w-full flex justify-center">
@@ -181,9 +181,9 @@ function AllModulesLayout({ children, userName = 'Super Admin' }) {
               {filteredNavigation.map((section, idx) => (
                 <div key={idx} className="mb-4">
                   {isSidebarOpen && (
-                    <div className="text-lg font-anton font-light uppercase mb-3 px-3 py-1 flex items-center gap-2">
+                    <div className="font-anton font-light uppercase mb-3 px-3 py-1 flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full bg-${section.color} flex-shrink-0`}></span>
-                      <span className="text-text">{section.section}</span>
+                      <span className="text-text text-2xl">{section.section}</span>
                     </div>
                   )}
                   <div className="space-y-1">
@@ -308,7 +308,7 @@ function AllModulesLayout({ children, userName = 'Super Admin' }) {
       </aside>
 
       {/* Main Content Area */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-80' : 'md:ml-20'}`}>
+      <div className={`flex-1 flex flex-col transition-all duration-300 w-full max-w-full overflow-hidden ${isSidebarOpen ? 'md:ml-80' : 'md:ml-20'}`}>
         {/* Header */}
         <header className="sticky top-0 z-30 bg-background border-b border-text/10 px-6 py-3 md:px-10 md:py-4">
           <div className="flex items-center justify-between">
@@ -373,8 +373,10 @@ function AllModulesLayout({ children, userName = 'Super Admin' }) {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto bg-background">
-          {children}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-background w-full">
+          <div className="w-full max-w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>
