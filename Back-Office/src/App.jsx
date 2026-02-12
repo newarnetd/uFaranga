@@ -1,154 +1,73 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { Button, FacebookButton } from './components/common';
-import ThemeToggle from './components/common/ThemeToggle';
-import SpinnerShowcase from './components/SpinnerShowcase';
+import AllModulesLayout from './components/AllModulesLayout';
 
-function AppContent() {
-  const [loadingStates, setLoadingStates] = useState({
-    standard: false,
-    facebook: false,
-    variant: false
-  });
-  const [showSpinnerShowcase, setShowSpinnerShowcase] = useState(false);
+// Agent Pages
+import AgentDashboard from './pages/agent/AgentDashboard';
+import AgentTransactions from './pages/agent/Transactions';
 
-  const handleTestSpinner = (type) => {
-    setLoadingStates(prev => ({ ...prev, [type]: true }));
-    
-    // Arrêter le spinner après 3 secondes
-    setTimeout(() => {
-      setLoadingStates(prev => ({ ...prev, [type]: false }));
-    }, 3000);
-  };
-
-  if (showSpinnerShowcase) {
-    return <SpinnerShowcase onBack={() => setShowSpinnerShowcase(false)} />;
-  }
-
-  return (
-    <div className="min-h-screen transition-colors duration-300">
-      <div className="p-8">
-        {/* Header avec toggle de thème */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-indigo-600 font-roboto">uFaranga - Back Office</h1>
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="outline" 
-              size="small"
-              onClick={() => setShowSpinnerShowcase(true)}
-            >
-              🎨 Voir les Spinners
-            </Button>
-            <ThemeToggle />
-          </div>
-        </div>
-        
-        <div className="mt-4 p-4 bg-card border border-default rounded mb-8">
-          <p className="text-muted">Panneau d'administration avec thème dark/light. Cliquez sur l'icône pour basculer !</p>
-        </div>
-
-        {/* Test des Boutons avec Spinners */}
-        <div className="bg-card border border-default p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-semibold mb-4">Test des Boutons avec Spinners - Admin</h2>
-          
-          <div className="flex flex-wrap gap-4 mb-6">
-            <Button 
-              variant="primary"
-              loading={loadingStates.standard}
-              onClick={() => handleTestSpinner('standard')}
-              disabled={loadingStates.standard}
-            >
-              {loadingStates.standard ? 'En cours...' : 'Test Spinner Standard'}
-            </Button>
-            
-            <Button 
-              variant="facebook"
-              loading={loadingStates.variant}
-              onClick={() => handleTestSpinner('variant')}
-              disabled={loadingStates.variant}
-            >
-              {loadingStates.variant ? 'En cours...' : 'Bouton Facebook Variant'}
-            </Button>
-          </div>
-        </div>
-
-        {/* Test du Bouton Facebook */}
-        <div className="bg-card border border-default p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Bouton Facebook Style Exact - Admin</h2>
-          
-          <div className="flex flex-wrap gap-4 mb-6">
-            <FacebookButton 
-              size="small"
-              loading={loadingStates.facebook}
-              onClick={() => handleTestSpinner('facebook')}
-              disabled={loadingStates.facebook}
-            >
-              {loadingStates.facebook ? 'Connexion...' : 'Admin Facebook Login'}
-            </FacebookButton>
-            
-            <FacebookButton 
-              size="medium"
-              fullWidth={false}
-            >
-              Authentification Facebook
-            </FacebookButton>
-            
-            <FacebookButton 
-              size="large"
-              fullWidth={false}
-            >
-              Connexion Administrateur
-            </FacebookButton>
-          </div>
-
-          <div className="text-sm text-muted">
-            <p>• Thème dark par défaut (bg: noir, text: blanc)</p>
-            <p>• Basculement vers thème light disponible</p>
-            <p>• Couleurs Facebook : #1877f2</p>
-            <p>• Spinner radial amélioré</p>
-            <p>• Police par défaut : Roboto</p>
-          </div>
-        </div>
-
-        {/* Démonstration des Polices - Admin */}
-        <div className="bg-card border border-default p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 font-roboto">Polices Disponibles - Administration</h2>
-          
-          <div className="space-y-4">
-            <div className="p-4 border border-default rounded">
-              <h3 className="text-lg font-roboto font-medium mb-2">Roboto (Par défaut)</h3>
-              <p className="font-roboto text-base">Interface d'administration avec police moderne et professionnelle.</p>
-              <p className="font-roboto font-bold text-sm mt-1">Classes : font-roboto, font-sans</p>
-            </div>
-            
-            <div className="p-4 border border-default rounded">
-              <h3 className="text-2xl font-anton mb-2">ANTON - ADMIN</h3>
-              <p className="font-roboto text-sm text-muted">Pour les titres importants du back-office.</p>
-              <p className="font-roboto font-bold text-sm mt-1">Classe : font-anton</p>
-            </div>
-            
-            <div className="p-4 border border-default rounded">
-              <h3 className="text-2xl font-bangers mb-2">BANGERS ADMIN</h3>
-              <p className="font-roboto text-sm text-muted">Style décontracté pour certains éléments.</p>
-              <p className="font-roboto font-bold text-sm mt-1">Classe : font-bangers</p>
-            </div>
-            
-            <div className="p-4 border border-default rounded">
-              <h3 className="text-2xl font-cookie mb-2">Cookie Admin</h3>
-              <p className="font-roboto text-sm text-muted">Pour les éléments décoratifs du back-office.</p>
-              <p className="font-roboto font-bold text-sm mt-1">Classe : font-cookie</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+// Admin System Pages
+import AdminDashboard from './pages/admin/AdminDashboard';
+import CartographieAgents from './pages/admin/CartographieAgents';
 
 function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <Router>
+        <AllModulesLayout userName="Super Admin">
+          <Routes>
+            {/* Agent Routes */}
+            <Route path="/agent/dashboard" element={<AgentDashboard />} />
+            <Route path="/agent/transactions" element={<AgentTransactions />} />
+            <Route path="/agent/float" element={<AgentDashboard />} />
+            <Route path="/agent/rapports" element={<AgentDashboard />} />
+            <Route path="/agent/commissions" element={<AgentDashboard />} />
+            <Route path="/agent/notifications" element={<AgentDashboard />} />
+            <Route path="/agent/parametres" element={<AgentDashboard />} />
+
+            {/* Admin System Routes */}
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/cartographie" element={<CartographieAgents />} />
+            <Route path="/admin/agents" element={<AdminDashboard />} />
+            <Route path="/admin/clients" element={<AdminDashboard />} />
+            <Route path="/admin/transactions" element={<AdminDashboard />} />
+            <Route path="/admin/commissions" element={<AdminDashboard />} />
+            <Route path="/admin/float-global" element={<AdminDashboard />} />
+            <Route path="/admin/reporting" element={<AdminDashboard />} />
+            <Route path="/admin/fraude" element={<AdminDashboard />} />
+            <Route path="/admin/securite" element={<AdminDashboard />} />
+            <Route path="/admin/parametres" element={<AdminDashboard />} />
+
+            {/* Client Routes */}
+            <Route path="/client/dashboard" element={<AgentDashboard />} />
+            <Route path="/client/transfert" element={<AgentDashboard />} />
+            <Route path="/client/paiement" element={<AgentDashboard />} />
+            <Route path="/client/depot" element={<AgentDashboard />} />
+            <Route path="/client/retrait" element={<AgentDashboard />} />
+            <Route path="/client/historique" element={<AgentDashboard />} />
+            <Route path="/client/releves" element={<AgentDashboard />} />
+            <Route path="/client/profil" element={<AgentDashboard />} />
+            <Route path="/client/securite" element={<AgentDashboard />} />
+
+            {/* Admin Tech Routes */}
+            <Route path="/tech/monitoring" element={<AdminDashboard />} />
+            <Route path="/tech/performance" element={<AdminDashboard />} />
+            <Route path="/tech/api" element={<AdminDashboard />} />
+            <Route path="/tech/webhooks" element={<AdminDashboard />} />
+            <Route path="/tech/sms" element={<AdminDashboard />} />
+            <Route path="/tech/email" element={<AdminDashboard />} />
+            <Route path="/tech/logs" element={<AdminDashboard />} />
+            <Route path="/tech/maintenance" element={<AdminDashboard />} />
+            <Route path="/tech/firewall" element={<AdminDashboard />} />
+            <Route path="/tech/detection" element={<AdminDashboard />} />
+            <Route path="/tech/database" element={<AdminDashboard />} />
+
+            {/* Default redirect */}
+            <Route path="/" element={<Navigate to="/agent/dashboard" replace />} />
+          </Routes>
+        </AllModulesLayout>
+      </Router>
     </ThemeProvider>
   );
 }
