@@ -27,7 +27,8 @@ function CartographieAgents() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showProvinces, setShowProvinces] = useState(false);
   const [showAgents, setShowAgents] = useState(true);
-  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [selectedAgentDetail, setSelectedAgentDetail] = useState(null);
   const [mapStyle, setMapStyle] = useState('mapbox://styles/mapbox/dark-v11');
   const [viewMode, setViewMode] = useState('3d');
   const markersRef = useRef([]);
@@ -61,11 +62,11 @@ function CartographieAgents() {
       zoom: BURUNDI_CENTER.zoom,
       pitch: 45,
       bearing: 0,
-      antialias: true
+      antialias: true,
+      attributionControl: false // Enlever les attributions
     });
 
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-    map.current.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+    // Pas de contrôles par défaut
 
     map.current.fitBounds([
       [BURUNDI_BOUNDS.minLng, BURUNDI_BOUNDS.minLat],
@@ -190,6 +191,7 @@ function CartographieAgents() {
         duration: 2000
       });
       setSelectedAgent(agent);
+      setSelectedAgentDetail(agent); // Ouvrir le modal détaillé
     }
   };
 
@@ -430,6 +432,133 @@ function CartographieAgents() {
             </div>
           </div>
         </div>
+
+        {/* Modal détails de l'agent */}
+        {selectedAgentDetail && (
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setSelectedAgentDetail(null)}>
+            <div className="bg-card border border-darkGray rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              {/* Header */}
+              <div className="p-6 border-b border-darkGray bg-darkGray/30 sticky top-0 z-10">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-anton uppercase text-secondary">{selectedAgentDetail.nom}</h2>
+                    <p className="text-sm text-gray-400 mt-1">{selectedAgentDetail.id} • {selectedAgentDetail.province}</p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedAgentDetail(null)}
+                    className="p-2 hover:bg-danger/20 rounded-lg transition-colors"
+                  >
+                    <X className="w-6 h-6 text-gray-400 hover:text-danger" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Contenu */}
+              <div className="p-6 space-y-6">
+                {/* Stats principales */}
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="bg-background border border-darkGray rounded-lg p-4">
+                    <div className="text-xs text-gray-400 mb-1">Float disponible</div>
+                    <div className="text-2xl font-bold text-primary">{(selectedAgentDetail.float / 1000000).toFixed(1)}M</div>
+                    <div className="text-xs text-gray-500 mt-1">BIF</div>
+                  </div>
+                  <div className="bg-background border border-darkGray rounded-lg p-4">
+                    <div className="text-xs text-gray-400 mb-1">Transactions/jour</div>
+                    <div className="text-2xl font-bold text-secondary">{selectedAgentDetail.transactions}</div>
+                    <div className="text-xs text-gray-500 mt-1">en moyenne</div>
+                  </div>
+                  <div className="bg-background border border-darkGray rounded-lg p-4">
+                    <div className="text-xs text-gray-400 mb-1">Commissions</div>
+                    <div className="text-2xl font-bold text-text">{(selectedAgentDetail.commissions / 1000).toFixed(0)}K</div>
+                    <div className="text-xs text-gray-500 mt-1">BIF/mois</div>
+                  </div>
+                  <div className="bg-background border border-darkGray rounded-lg p-4">
+                    <div className="text-xs text-gray-400 mb-1">Statut</div>
+                    <div className={`text-lg font-bold ${selectedAgentDetail.status === 'actif' ? 'text-secondary' : 'text-danger'}`}>
+                      {selectedAgentDetail.status === 'actif' ? 'Actif' : 'Inactif'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Performance */}
+                <div className="bg-background border border-darkGray rounded-lg p-5">
+                  <h3 className="text-lg font-semibold text-text mb-4">Performance mensuelle</h3>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-gray-400">Volume traité</span>
+                        <span className="text-sm font-bold text-primary">{(selectedAgentDetail.float * 3 / 1000000).toFixed(1)}M BIF</span>
+                      </div>
+                      <div className="h-2 bg-darkGray rounded-full overflow-hidden">
+                        <div className="h-full bg-primary" style={{ width: '75%' }} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-gray-400">Taux de réussite</span>
+                        <span className="text-sm font-bold text-secondary">96%</span>
+                      </div>
+                      <div className="h-2 bg-darkGray rounded-full overflow-hidden">
+                        <div className="h-full bg-secondary" style={{ width: '96%' }} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-gray-400">Satisfaction client</span>
+                        <span className="text-sm font-bold text-text">4.8/5</span>
+                      </div>
+                      <div className="h-2 bg-darkGray rounded-full overflow-hidden">
+                        <div className="h-full bg-text" style={{ width: '96%' }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Services offerts */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-background border border-darkGray rounded-lg p-4">
+                    <h4 className="text-sm font-semibold text-text mb-3">Services disponibles</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary"></div>
+                        <span className="text-gray-300">Dépôt d'argent</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-secondary"></div>
+                        <span className="text-gray-300">Retrait d'argent</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-text"></div>
+                        <span className="text-gray-300">Transfert</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary"></div>
+                        <span className="text-gray-300">Paiement factures</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-background border border-darkGray rounded-lg p-4">
+                    <h4 className="text-sm font-semibold text-text mb-3">Informations</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Téléphone:</span>
+                        <span className="text-text">+257 79 XXX XXX</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Horaires:</span>
+                        <span className="text-text">7h - 20h</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Depuis:</span>
+                        <span className="text-text">Jan 2024</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
